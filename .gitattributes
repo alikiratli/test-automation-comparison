@@ -1,0 +1,54 @@
+# Satir sonu normalizasyonu
+#
+# Bu depo Windows'ta gelistiriliyor ancak deposu LF ile saklaniyor. Asagidaki
+# kurallar olmadan Git, core.autocrlf ayarina gore her makinede farkli davranir
+# ve "LF will be replaced by CRLF" uyarilari cikar. Kurallar acik yazildigi icin
+# artik kimin makinesinde hangi ayar oldugu fark etmez.
+
+# Varsayilan: metin dosyalarini otomatik algila, depoda LF sakla,
+# calisma dizinine de LF olarak yaz.
+* text=auto eol=lf
+
+# --- Windows script'leri: calisma dizininde CRLF olmali ---
+*.ps1   text eol=crlf
+*.psm1  text eol=crlf
+*.psd1  text eol=crlf
+*.bat   text eol=crlf
+*.cmd   text eol=crlf
+
+# --- Unix script'leri: her zaman LF ---
+*.sh    text eol=lf
+
+# --- Kaynak / yapilandirma dosyalari (acikca metin) ---
+*.py        text
+*.robot     text
+*.resource  text
+*.md        text
+*.txt       text
+*.ini       text
+*.cfg       text
+*.toml      text
+*.yaml      text
+*.yml       text
+*.json      text
+*.csv       text
+*.html      text
+*.xml       text
+
+# --- Binary: asla donusturme, diff'te metin sanma ---
+*.docx  binary
+*.xlsx  binary
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webm  binary
+*.zip   binary
+*.pyc   binary
+
+# --- GitHub dil istatistikleri ---
+# Gorsel regresyon referanslari ve uretilmis rapor ciktilari dil sayimina
+# girmesin; depo "Python" olarak gorunsun.
+03-playwright-pytest/reports/visual_baseline/** linguist-generated=true
