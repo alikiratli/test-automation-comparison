@@ -9,6 +9,7 @@
 ![Robot Framework](https://img.shields.io/badge/Robot%20Framework-7.0+-000000?logo=robotframework&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-1.44+-2EAD33?logo=playwright&logoColor=white)
 ![pytest](https://img.shields.io/badge/pytest-8.0+-0A9EDC?logo=pytest&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 Bu depo [SauceDemo](https://www.saucedemo.com) uygulamasını **üç ayrı otomasyon
 yığınıyla** baştan sona test eder. Amaç bir framework'ü "kazandırmak" değil;
@@ -29,6 +30,7 @@ yetenek** farklarını yan yana, ölçülmüş verilerle göstermektir.
 - [Bu projenin bulduğu gerçek kusur](#bu-projenin-bulduğu-gerçek-kusur)
 - [Test hesapları](#test-hesapları)
 - [Raporu yeniden üretmek](#raporu-yeniden-üretmek)
+- [Lisans](#lisans)
 
 ---
 
@@ -295,3 +297,14 @@ python docs\generate_report.py
 Script, `Otomasyon_Karsilastirma_Raporu.docx` dosyasını proje kökünde yeniden
 oluşturur. Rapordaki tüm sayısal değerler yukarıdaki gerçek koşum sonuçlarından
 gelir.
+
+---
+
+## Lisans
+
+Bu proje [MIT Lisansı](LICENSE) ile yayınlanmıştır — serbestçe kullanabilir,
+değiştirebilir ve dağıtabilirsiniz; tek koşul telif bildiriminin korunmasıdır.
+
+Test edilen uygulama [SauceDemo](https://www.saucedemo.com) bu projeye ait
+değildir; Sauce Labs tarafından otomasyon pratiği için public olarak sunulan bir
+demo uygulamasıdır. MIT lisansı yalnızca bu depodaki test kodunu kapsar.

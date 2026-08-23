@@ -9,6 +9,7 @@
 ![Robot Framework](https://img.shields.io/badge/Robot%20Framework-7.0+-000000?logo=robotframework&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-1.44+-2EAD33?logo=playwright&logoColor=white)
 ![pytest](https://img.shields.io/badge/pytest-8.0+-0A9EDC?logo=pytest&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 This repository tests the [SauceDemo](https://www.saucedemo.com) application
 end to end with **three separate automation stacks**. The goal is not to crown a
@@ -34,6 +35,7 @@ capability** on a real project.
 - [A real defect this project found](#a-real-defect-this-project-found)
 - [Test accounts](#test-accounts)
 - [Regenerating the report](#regenerating-the-report)
+- [License](#license)
 
 ---
 
@@ -300,3 +302,14 @@ python docs\generate_report.py
 
 The script rebuilds `Otomasyon_Karsilastirma_Raporu.docx` at the project root. Every
 figure in the report comes from the real run results shown above.
+
+---
+
+## License
+
+Released under the [MIT License](LICENSE) — you are free to use, modify and
+distribute it, the only condition being that the copyright notice is preserved.
+
+The application under test, [SauceDemo](https://www.saucedemo.com), is not part of
+this project; it is a demo application published publicly by Sauce Labs for
+automation practice. The MIT license covers only the test code in this repository.
