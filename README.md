@@ -2,6 +2,8 @@
 
 **Aynı uygulama. Aynı test senaryoları. Üç farklı otomasyon teknolojisi.**
 
+🇹🇷 **Türkçe** · 🇬🇧 [English](README.en.md)
+
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![Selenium](https://img.shields.io/badge/Selenium-4.20+-43B02A?logo=selenium&logoColor=white)
 ![Robot Framework](https://img.shields.io/badge/Robot%20Framework-7.0+-000000?logo=robotframework&logoColor=white)
