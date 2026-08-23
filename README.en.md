@@ -4,6 +4,9 @@
 
 🇹🇷 [Türkçe](README.md) · 🇬🇧 **English**
 
+[![CI](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml)
+[![Full suite](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml)
+
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![Selenium](https://img.shields.io/badge/Selenium-4.20+-43B02A?logo=selenium&logoColor=white)
 ![Robot Framework](https://img.shields.io/badge/Robot%20Framework-7.0+-000000?logo=robotframework&logoColor=white)
@@ -34,6 +37,7 @@ capability** on a real project.
 - [Running the tests](#running-the-tests)
 - [A real defect this project found](#a-real-defect-this-project-found)
 - [Test accounts](#test-accounts)
+- [Continuous integration (CI)](#continuous-integration-ci)
 - [Regenerating the report](#regenerating-the-report)
 - [License](#license)
 
@@ -290,6 +294,41 @@ SauceDemo publishes these accounts publicly on its login page; they are not secr
 | `error_user`, `visual_user` | Checkout and visual failures |
 
 Password for all of them: `secret_sauce`
+
+---
+
+## Continuous integration (CI)
+
+Because the tests hit a **live third-party site** and the three full suites take
+~16 minutes combined, CI is split in two:
+
+| Workflow | When | What it runs | Duration |
+|----------|------|--------------|----------|
+| [`ci.yml`](.github/workflows/ci.yml) | Every push / PR | Static checks + the **smoke** tests of all three stacks | ~5 min |
+| [`full-suite.yml`](.github/workflows/full-suite.yml) | Nightly at 03:00 UTC + manual | The **full** suite of all three stacks | ~20 min |
+
+**`ci.yml` — static checks** (no browser, done in seconds): Python bytecode
+compilation, `shared/*.json` validity, resolving the Robot suites with `--dryrun`
+(typos and missing keywords are caught here) and a pytest `--collect-only` sweep
+for import errors. The smoke jobs do not start until these pass.
+
+**The smoke jobs** run in parallel for the three stacks with `fail-fast: false` —
+the point is to answer "which stack broke" in a single run. Each run's HTML report
+is uploaded as an artifact.
+
+**`full-suite.yml`** accepts a single stack when triggered manually
+(`all` / `selenium` / `robot` / `playwright`), and writes each job's duration to
+the GitHub job summary as a table.
+
+Two details are deliberate:
+
+* **`--reruns`** — since the tests depend on a site outside our control, retries
+  are enabled so that one-off network failures do not break the build. A genuine
+  regression fails on every attempt and is therefore not masked.
+* **`-m "not visual"` for Playwright** — the visual regression baselines were
+  generated on Windows; font rendering differs on the Linux runner, so those tests
+  would fail because of a **platform difference**, not a real regression. Visual
+  tests should therefore be run locally on Windows.
 
 ---
 

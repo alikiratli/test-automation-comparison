@@ -4,6 +4,9 @@
 
 🇹🇷 **Türkçe** · 🇬🇧 [English](README.en.md)
 
+[![CI](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml)
+[![Tam paket](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml)
+
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![Selenium](https://img.shields.io/badge/Selenium-4.20+-43B02A?logo=selenium&logoColor=white)
 ![Robot Framework](https://img.shields.io/badge/Robot%20Framework-7.0+-000000?logo=robotframework&logoColor=white)
@@ -29,6 +32,7 @@ yetenek** farklarını yan yana, ölçülmüş verilerle göstermektir.
 - [Çalıştırma](#çalıştırma)
 - [Bu projenin bulduğu gerçek kusur](#bu-projenin-bulduğu-gerçek-kusur)
 - [Test hesapları](#test-hesapları)
+- [Sürekli entegrasyon (CI)](#sürekli-entegrasyon-ci)
 - [Raporu yeniden üretmek](#raporu-yeniden-üretmek)
 - [Lisans](#lisans)
 
@@ -284,6 +288,42 @@ SauceDemo bu hesapları giriş sayfasında public olarak yayınlar; gizli bir bi
 | `error_user`, `visual_user` | Checkout ve görsel hataları |
 
 Şifre hepsi için: `secret_sauce`
+
+---
+
+## Sürekli entegrasyon (CI)
+
+Testler **canlı bir üçüncü taraf siteye** bağlandığı ve tam paket üçü birden
+~16 dakika sürdüğü için CI ikiye bölünmüştür:
+
+| Workflow | Ne zaman | Ne koşar | Süre |
+|----------|----------|----------|------|
+| [`ci.yml`](.github/workflows/ci.yml) | Her push / PR | Statik kontroller + üç yığının **smoke** testleri | ~5 dk |
+| [`full-suite.yml`](.github/workflows/full-suite.yml) | Her gece 03:00 UTC + elle | Üç yığının **tüm** paketi | ~20 dk |
+
+**`ci.yml` — statik kontroller** (tarayıcı açmadan, saniyeler içinde):
+Python söz dizimi derlemesi, `shared/*.json` geçerlilik kontrolü, Robot
+suite'lerinin `--dryrun` ile çözümlenmesi (yazım hatası / eksik keyword burada
+yakalanır) ve pytest `--collect-only` ile import hatası taraması. Bunlar geçmeden
+smoke işleri başlamaz.
+
+**Smoke işleri** üç yığın için paralel koşar ve `fail-fast: false` ile
+tanımlanmıştır — amaç "hangi yığın bozuldu" sorusunu tek koşumda cevaplayabilmek.
+Her koşumun HTML raporu artifact olarak yüklenir.
+
+**`full-suite.yml`** elle tetiklendiğinde tek bir yığın seçilebilir
+(`all` / `selenium` / `robot` / `playwright`) ve her işin süresi GitHub iş özetine
+tablo olarak yazılır.
+
+İki ayrıntı bilinçli tercihtir:
+
+* **`--reruns`** — testler kontrolümüzde olmayan bir siteye bağlandığı için ağ
+  kaynaklı tek seferlik hatalar build'i kırmasın diye yeniden deneme açıktır.
+  Gerçek bir regresyon her denemede düşeceği için maskelenmez.
+* **Playwright'ta `-m "not visual"`** — görsel regresyon referansları Windows'ta
+  üretildi; Linux runner'da yazı tipi render'ı farklı olduğu için bu testler
+  gerçek bir regresyondan değil, **platform farkından** düşer. Görsel testler bu
+  yüzden yerelde (Windows'ta) koşturulmalıdır.
 
 ---
 
