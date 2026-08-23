@@ -1,0 +1,19 @@
+# --- Playwright tabanli otomasyon icin bagimliliklar ---
+# Playwright, tarayici binary'lerini KENDISI indirir ve surumu kilitler.
+# Kurulumdan sonra bir kez calistirin:
+#     python -m playwright install chromium firefox webkit
+playwright>=1.44.0
+pytest-playwright>=0.5.0    # page/context/browser fixture'lari, trace, video
+
+pytest>=8.0.0
+pytest-html>=4.1.1
+pytest-xdist>=3.5.0
+pytest-rerunfailures>=14.0
+
+PyYAML>=6.0.1
+requests>=2.31.0
+
+# NOT: Selenium projesinden farkli olarak burada webdriver, driver yoneticisi
+# veya tarayici surum uyumu ile ilgili HICBIR paket yoktur. Playwright
+# tarayiciyi CDP/WebSocket uzerinden dogrudan surer; WebDriver protokolu ve
+# ara surucu sureci devre disidir. Hiz farkinin ana kaynagi budur.

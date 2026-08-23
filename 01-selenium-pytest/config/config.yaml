@@ -1,0 +1,38 @@
+# ---------------------------------------------------------------------------
+# Ortam yapilandirmasi.
+# CLI parametreleri (--env, --browser, --headless) buradaki degerleri ezer.
+# ---------------------------------------------------------------------------
+default_env: prod
+
+environments:
+  prod:
+    base_url: "https://www.saucedemo.com"
+  staging:
+    base_url: "https://www.saucedemo.com"   # demo amacli ayni adres
+
+browser:
+  name: chrome            # chrome | firefox | edge
+  headless: true
+  window_width: 1920
+  window_height: 1080
+  # Selenium'da implicit wait KULLANMIYORUZ. Sebep: implicit + explicit wait
+  # karisimi WebDriver'da ongorulemez bekleme surelerine yol acar.
+  implicit_wait: 0
+
+timeouts:
+  page_load: 30           # sayfa yuklenme ust siniri (sn)
+  script: 20              # JS execute ust siniri (sn)
+  explicit_wait: 15       # varsayilan WebDriverWait suresi (sn)
+  slow_user_wait: 40      # performance_glitch_user icin uzatilmis sure (sn)
+  poll_frequency: 0.25    # WebDriverWait polling araligi (sn)
+
+retry:
+  stale_element_attempts: 3
+  stale_element_backoff: 0.4
+
+artifacts:
+  screenshot_on_failure: true
+  screenshot_dir: reports/screenshots
+  page_source_on_failure: true
+  page_source_dir: reports/page_source
+  log_dir: reports/logs

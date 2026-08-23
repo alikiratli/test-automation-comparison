@@ -1,0 +1,10 @@
+# --- Robot Framework tabanli otomasyon icin bagimliliklar ---
+robotframework>=7.0
+robotframework-seleniumlibrary>=6.3.0   # Selenium'u keyword'lere sarar
+robotframework-datadriver>=1.11.0       # CSV/Excel'den veri odakli test uretir
+robotframework-pabot>=2.18.0            # Paralel suite kosumu
+robotframework-jsonlibrary>=0.5         # JSON test verisi okumak icin
+
+# SeleniumLibrary'nin altinda yine Selenium calisir - "Robot Framework,
+# Selenium'un ALTERNATIFI degil, UZERINE kurulan bir katmandir".
+selenium>=4.20.0

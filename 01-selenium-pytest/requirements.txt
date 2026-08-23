@@ -1,0 +1,15 @@
+# --- Selenium tabanli otomasyon icin bagimliliklar ---
+# Selenium 4.6+ icinde "Selenium Manager" gelir: chromedriver/geckodriver'i
+# otomatik indirir. Bu yuzden webdriver-manager gibi ek bir pakete ihtiyac yok.
+selenium>=4.20.0
+
+# Test kosucu ve eklentileri
+pytest>=8.0.0
+pytest-html>=4.1.1          # tek dosyalik HTML rapor
+pytest-xdist>=3.5.0         # -n 4 ile paralel kosum (process bazli)
+pytest-rerunfailures>=14.0  # flaky testleri otomatik tekrar deneme
+pytest-timeout>=2.3.1       # takilan testleri oldurme
+
+# Yardimci kutuphaneler
+PyYAML>=6.0.1               # config.yaml okumak icin
+requests>=2.31.0            # saglik kontrolu / on kosul cagrilari

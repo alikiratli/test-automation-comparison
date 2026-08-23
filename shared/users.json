@@ -1,0 +1,70 @@
+{
+  "_comment": "Uc framework de bu ayni dosyayi okur. Boylece test verisi tek kaynaktan yonetilir ve karsilastirma adil olur.",
+  "password": "secret_sauce",
+  "users": [
+    {
+      "id": "standard",
+      "username": "standard_user",
+      "password": "secret_sauce",
+      "should_login": true,
+      "expected_error": null,
+      "description": "Normal davranan referans kullanici"
+    },
+    {
+      "id": "locked_out",
+      "username": "locked_out_user",
+      "password": "secret_sauce",
+      "should_login": false,
+      "expected_error": "Epic sadface: Sorry, this user has been locked out.",
+      "description": "Hesabi kilitli kullanici"
+    },
+    {
+      "id": "problem",
+      "username": "problem_user",
+      "password": "secret_sauce",
+      "should_login": true,
+      "expected_error": null,
+      "description": "Bozuk gorseller ve hatali form alanlari olan kullanici"
+    },
+    {
+      "id": "performance_glitch",
+      "username": "performance_glitch_user",
+      "password": "secret_sauce",
+      "should_login": true,
+      "expected_error": null,
+      "description": "Kasitli gecikme uygulayan kullanici - wait stratejisini test eder"
+    },
+    {
+      "id": "wrong_password",
+      "username": "standard_user",
+      "password": "wrong_password",
+      "should_login": false,
+      "expected_error": "Epic sadface: Username and password do not match any user in this service",
+      "description": "Dogru kullanici adi, yanlis sifre"
+    },
+    {
+      "id": "unknown_user",
+      "username": "ghost_user",
+      "password": "secret_sauce",
+      "should_login": false,
+      "expected_error": "Epic sadface: Username and password do not match any user in this service",
+      "description": "Sistemde olmayan kullanici"
+    },
+    {
+      "id": "empty_username",
+      "username": "",
+      "password": "secret_sauce",
+      "should_login": false,
+      "expected_error": "Epic sadface: Username is required",
+      "description": "Kullanici adi bos"
+    },
+    {
+      "id": "empty_password",
+      "username": "standard_user",
+      "password": "",
+      "should_login": false,
+      "expected_error": "Epic sadface: Password is required",
+      "description": "Sifre bos"
+    }
+  ]
+}

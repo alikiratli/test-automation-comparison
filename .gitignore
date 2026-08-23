@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Test ciktilari (her kosumda yeniden uretilir)
+01-selenium-pytest/reports/
+02-robot-framework/results/
+03-playwright-pytest/reports/*
+03-playwright-pytest/.auth/
+
+# ...ancak gorsel regresyon referanslari SURUM KONTROLUNE GIRMELIDIR
+!03-playwright-pytest/reports/visual_baseline/
+!03-playwright-pytest/reports/visual_baseline/**
+
+# IDE / arac ayarlari
+.idea/
+.vscode/
+*.swp
+.claude/settings.local.json

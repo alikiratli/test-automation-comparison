@@ -1,0 +1,18 @@
+{
+  "_comment": "SauceDemo envanterindeki 6 urun. Fiyatlar uygulama tarafinda sabittir, regresyon icin referans olarak kullanilir.",
+  "expected_product_count": 6,
+  "products": [
+    { "name": "Sauce Labs Backpack", "price": 29.99, "data_test_id": "add-to-cart-sauce-labs-backpack" },
+    { "name": "Sauce Labs Bike Light", "price": 9.99, "data_test_id": "add-to-cart-sauce-labs-bike-light" },
+    { "name": "Sauce Labs Bolt T-Shirt", "price": 15.99, "data_test_id": "add-to-cart-sauce-labs-bolt-t-shirt" },
+    { "name": "Sauce Labs Fleece Jacket", "price": 49.99, "data_test_id": "add-to-cart-sauce-labs-fleece-jacket" },
+    { "name": "Sauce Labs Onesie", "price": 7.99, "data_test_id": "add-to-cart-sauce-labs-onesie" },
+    { "name": "Test.allTheThings() T-Shirt (Red)", "price": 15.99, "data_test_id": "add-to-cart-test.allthethings()-t-shirt-(red)" }
+  ],
+  "tax_rate": 0.08,
+  "checkout_customer": {
+    "first_name": "Ali",
+    "last_name": "Kiratli",
+    "postal_code": "34710"
+  }
+}

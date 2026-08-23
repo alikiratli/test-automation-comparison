@@ -1,0 +1,6 @@
+*** Test Cases ***,${USERNAME},${PASSWORD_VALUE},${EXPECTED_ERROR},[Tags],[Documentation]
+Login - Kilitli kullanici,locked_out_user,secret_sauce,"Epic sadface: Sorry, this user has been locked out.",negative,Hesabi kilitli kullanici giris yapamamali
+Login - Yanlis sifre,standard_user,wrong_password,Epic sadface: Username and password do not match any user in this service,negative,Dogru kullanici adi yanlis sifre
+Login - Olmayan kullanici,ghost_user,secret_sauce,Epic sadface: Username and password do not match any user in this service,negative,Sistemde olmayan kullanici
+Login - Bos kullanici adi,,secret_sauce,Epic sadface: Username is required,negative,Kullanici adi zorunlu alan
+Login - Bos sifre,standard_user,,Epic sadface: Password is required,negative,Sifre zorunlu alan
