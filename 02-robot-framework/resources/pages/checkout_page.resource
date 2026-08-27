@@ -159,7 +159,19 @@ Order Confirmation Should Be Displayed
     ...    msg=Onay basligi beklenen metni icermiyor
     ${text} =    Get Text    ${COMPLETE_TEXT}
     Should Contain    ${text}    dispatched    ignore_case=${True}
-    Element Should Be Visible    ${PONY_IMAGE}
+    # BEKLEYEREK dogrula, ANINDA degil - CI'da olculerek bulundu:
+    # `Element Should Be Visible` hicbir bekleme yapmaz. Onay basligi
+    # gorundugu anda bu GORSEL henuz yuklenmemis olabilir; yuklenmemis bir
+    # <img> sifir boyutludur ve `is_displayed()` False doner. Yavas bir
+    # kosucuda (GitHub Actions) bu, akis dogru calistigi halde testi dusurur.
+    #
+    # KARSILASTIRMA NOTU - UC YIGININ AYRISTIGI NOKTA:
+    #   Playwright : expect(pony_image).to_be_visible()  -> KENDILIGINDEN bekler
+    #   Selenium   : is_visible(PONY_IMAGE, timeout=5)   -> bekleme ELLE yazilmis
+    #   Robot      : Element Should Be Visible           -> bekleme YOK (bu hata)
+    # Beklemeyi hatirlamak Selenium ve Robot'ta gelistiricinin isidir;
+    # unutuldugunda test yerelde gecer, CI'da duser.
+    Wait Until Element Is Visible    ${PONY_IMAGE}    ${DEFAULT_TIMEOUT}
 
 Cart Should Be Cleared After Order
     ${count} =    Get Cart Badge Count
