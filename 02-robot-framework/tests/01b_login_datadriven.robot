@@ -17,7 +17,11 @@ Documentation       CSV dosyasindan uretilen veri odakli login testleri.
 ...                 ile JSON okumak - ama orada veriyi kod ile testlere
 ...                 baglamak yine gelistiricinin isidir.
 
-Library             DataDriver    file=../data/login_scenarios.csv    encoding=utf-8
+# dialect=excel ZORUNLU: DataDriver'in varsayilan lehcesi 'Excel-EU' olup
+# ayrac olarak NOKTALI VIRGUL kullanir. Virgullu CSV'de tum satir tek bir
+# sutun olarak okunur, hicbir arguman sutunu bulunamaz ve suite
+# "Test cannot be empty" ile duser.
+Library             DataDriver    file=../data/login_scenarios.csv    encoding=utf-8    dialect=excel
 Resource            ../resources/common.resource
 Resource            ../resources/pages/login_page.resource
 
@@ -34,5 +38,12 @@ Login senaryosu sablonu    ${USERNAME}    ${PASSWORD_VALUE}    ${EXPECTED_ERROR}
 
 *** Keywords ***
 Gecersiz Giris Denemesi
-    [Arguments]    ${username}    ${password}    ${expected_error}
-    Login Should Fail With Error    ${username}    ${password}    ${expected_error}
+    [Documentation]    ARGUMAN ADLARI CSV BASLIKLARIYLA BIREBIR AYNI OLMALIDIR.
+    ...
+    ...    DataDriver, her satir icin bu keyword'u cagirirken argumanlari
+    ...    ADLARINA GORE eslestirir ve eslestirme BUYUK/KUCUK HARFE DUYARLIDIR
+    ...    (bkz. DataDriver.py -> _get_template_arguments). Yani CSV'deki
+    ...    `${USERNAME}` sutunu ancak `${USERNAME}` adli bir argumana baglanir;
+    ...    `${username}` yazilirsa "Unassigned requiered argument" hatasi alinir.
+    [Arguments]    ${USERNAME}    ${PASSWORD_VALUE}    ${EXPECTED_ERROR}
+    Login Should Fail With Error    ${USERNAME}    ${PASSWORD_VALUE}    ${EXPECTED_ERROR}

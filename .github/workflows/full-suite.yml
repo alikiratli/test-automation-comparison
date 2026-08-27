@@ -78,10 +78,10 @@ jobs:
             echo "Atlandi: secim=$secim, bu is=${{ matrix.slug }}"
           fi
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: steps.gate.outputs.kos == 'true'
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         if: steps.gate.outputs.kos == 'true'
         with:
           python-version: "3.13"
@@ -114,11 +114,36 @@ jobs:
       - name: Tum paket (Robot)
         if: steps.gate.outputs.kos == 'true' && matrix.slug == 'robot'
         working-directory: ${{ matrix.dir }}
+        # Robot'un pytest'teki `--reruns` gibi bir secenegi YOKTUR; ayni
+        # toleransi `--rerunfailed` + `rebot --merge` ikilisi saglar: dusen
+        # testler 1 KEZ daha denenir ve sonuclar TEK rapora birlestirilir.
+        # Sayi, ayni iste kosan pytest'in `--reruns 1` degeriyle ayni tutuldu.
+        # Ayrintili gerekce icin bkz. ci.yml.
         run: |
+          set +e
           python -m robot \
             --outputdir results \
+            --output output.xml \
             --variablefile variables/environment.py:prod:chrome:true \
             tests/
+          durum=$?
+          deneme=0
+          while [ $durum -ne 0 ] && [ $deneme -lt 1 ]; do
+            deneme=$((deneme + 1))
+            echo "::warning::Robot: dusen testler icin tekrar denemesi $deneme"
+            python -m robot \
+              --rerunfailed results/output.xml \
+              --outputdir results \
+              --output rerun.xml \
+              --variablefile variables/environment.py:prod:chrome:true \
+              tests/
+            python -m robot.rebot \
+              --outputdir results \
+              --output output.xml \
+              --merge results/output.xml results/rerun.xml
+            durum=$?
+          done
+          exit $durum
 
       - name: Tum paket (Playwright)
         if: steps.gate.outputs.kos == 'true' && matrix.slug == 'playwright'
@@ -152,7 +177,7 @@ jobs:
 
       - name: Raporlari artifact olarak yukle
         if: always() && steps.gate.outputs.kos == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: full-report-${{ matrix.slug }}
           path: ${{ matrix.reports }}

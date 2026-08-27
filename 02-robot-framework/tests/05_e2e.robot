@@ -75,7 +75,11 @@ Problem kullanici bilinen hatalari
     ...
     ...    Izlenen iki bilinen hata:
     ...      1. 'Add to cart' butonu urunu sepete eklemiyor.
-    ...      2. Checkout formunda soyad alani duzgun doldurulamiyor.
+    ...      2. Checkout formunda soyad alani duzgun doldurulamiyor: alana
+    ...         yazilan deger AD alanina gidiyor, soyad bos kalir.
+    ...         Olculen davranis (JS ile yazip geri okuyarak):
+    ...             problem_user  -> ad=[Kiratli]  soyad=[]         posta=[34710]
+    ...             standard_user -> ad=[Ali]      soyad=[Kiratli]  posta=[34710]
     [Tags]    regression    known-issue
     Login As    ${PROBLEM_USER}
 
@@ -97,7 +101,15 @@ Problem kullanici bilinen hatalari
     # SauceDemo bos sepetle de checkout'a izin verdigi icin forma ulasabiliyoruz.
     Go To Cart Page
     Proceed To Checkout
-    Fill Checkout Information    Ali    Kiratli    34710
+
+    # `Fill Checkout Information`, yazilan degerin alana GERCEKTEN girdigini
+    # dogrular ve girmezse hata firlatir - normal testlerde istedigimiz budur.
+    # Burada ise hatanin ta kendisini gozlemliyoruz: soyad alani asla
+    # dolmayacagi icin dogrulama hatasi BEKLENEN sonuctur ve tolere edilir.
+    # Aksi halde bu characterization test, izlemek icin var oldugu hatayi
+    # her kosumda kirmizi yapardi.
+    Run Keyword And Ignore Error
+    ...    Fill Checkout Information    Ali    Kiratli    34710
     ${last_name} =    Get Value    ${LAST_NAME_INPUT}
     IF    '${last_name}' == 'Kiratli'
         Log    BILINEN HATA 2 ARTIK YOK - soyad alani duzgun dolduruldu.    level=WARN

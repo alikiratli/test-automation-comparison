@@ -2,7 +2,7 @@
 
 **Same application. Same test scenarios. Three different automation stacks.**
 
-🇹🇷 [Türkçe](README.md) · 🇬🇧 **English**
+🇹🇷 [Türkçe](README.md) · 🇬🇧 **English** · 🇩🇪 [Deutsch](README.de.md)
 
 [![CI](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml)
 [![Full suite](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml)
@@ -98,7 +98,7 @@ the "the test data was different" objection is closed up front. The Selenium tes
 | Stack | Tests | Duration | Per test | Result |
 |-------|:-----:|----------|:--------:|--------|
 | Selenium + pytest | 61 | 6 min 07 s (367 s) | 6.0 s | 61 passed |
-| Robot Framework | 47 | ≈9 min | ≈11.5 s | 47 passed |
+| Robot Framework | 51 | ≈9.5 min (577 s) | ≈11.3 s | 50 passed, 1 on retry |
 | Playwright + pytest | 75 | 1 min 37 s (97 s) | 1.3 s | 74 passed, 1 `xfail` |
 
 ### Identical login scenarios (like-for-like)
@@ -106,8 +106,16 @@ the "the test data was different" objection is closed up front. The Selenium tes
 | Stack | Scenarios | Duration | Relative |
 |-------|:---------:|----------|:--------:|
 | Selenium + pytest | 16 | 77 s | 3.2× |
-| Robot Framework | 10 | ≈115 s | 4.8× |
+| Robot Framework | 15 | 102 s | 4.2× |
 | Playwright + pytest | 15 | 24 s | 1.0× (baseline) |
+
+> **Two notes on the Robot row.** The test count is 51, not 47: the DataDriver
+> suite now really does expand the CSV and generates 5 tests from a one-line
+> template (previously the CSV could not be read at all and the suite failed with
+> a single broken test). "1 on retry" is the `performance_glitch_user` scenario:
+> SauceDemo's deliberately slowed-down account fails roughly 1 run in 3 against
+> the live site and passes when retried on its own. That is why CI now reruns
+> Robot too, just as it does Selenium and Playwright.
 
 **Where does the difference come from?** Selenium and Robot start a new browser
 process for every test, which alone costs ~1–2 seconds per test. Playwright

@@ -125,7 +125,24 @@ def configure_page(page: Page, settings: Settings) -> Page:
     page.set_default_navigation_timeout(settings.navigation_timeout)
 
     errors: list[str] = []
-    page.on("console", lambda msg: errors.append(msg.text) if msg.type == "error" else None)
+
+    def _record_console(msg) -> None:
+        """Konsol hatasini KAYNAK ADRESIYLE BIRLIKTE kaydeder.
+
+        NEDEN ADRES DE GEREKLI - CI'DA OLCULEREK BULUNDU:
+            Ag kaynakli hatalarin metni yalnizca
+            "Failed to load resource: the server responded with a status of
+            401 (Unauthorized)" olur; HANGI adresin dustugu metinde GECMEZ,
+            `msg.location` icinde durur. Yalnizca `msg.text` saklandiginda
+            testlerdeki "bilinen telemetri gurultusu" suzgeci hicbir zaman
+            eslesemez ve ucuncu taraf gurultusu build'i kirar.
+        """
+        if msg.type != "error":
+            return
+        url = (msg.location or {}).get("url", "")
+        errors.append(f"{msg.text} [{url}]" if url else msg.text)
+
+    page.on("console", _record_console)
     page.on("pageerror", lambda exc: errors.append(f"pageerror: {exc}"))
     page._console_errors = errors  # BasePage.collect_console_errors() okur
     return page

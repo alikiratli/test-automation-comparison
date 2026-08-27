@@ -24,6 +24,15 @@ ${SCREENSHOT_DIR}       ${CURDIR}/../results/screenshots
 ${CLICK_RETRY_BUDGET}   20s
 ${VERIFY_TIMEOUT}       3s
 
+# Yazma icin AYRI ve KISA bir butce - gerekcesi olculdu:
+# Klavye olaylari ya ilk denemede alana iner ya da hic inmez; "biraz daha
+# bekleyince duzelme" davranisi GOZLENMEDI. Tiklamanin 20 sn'lik butcesi
+# yazmaya uygulandiginda, JS'e dusmesi gereken her alan bosuna 20 sn
+# harciyordu: tek bir checkout validasyon testi bu yuzden 471 saniye
+# suruyordu. Alan zaten `Wait Until Element Is Visible` ile beklendigi icin
+# 5 sn fazlasiyla yeterlidir.
+${TYPE_RETRY_BUDGET}    5s
+
 ${CART_BADGE}           css:[data-test='shopping-cart-badge']
 ${CART_LINK}            css:[data-test='shopping-cart-link']
 ${BURGER_BUTTON}        id:react-burger-menu-btn
@@ -202,20 +211,77 @@ Type Text With Verify
     ...    test onlarca saniye sonra alakasiz bir hatayla dusuyor.
     ...    Tiklamada oldugu gibi burada da guvenilir olcut "yazildi mi" degil,
     ...    "alanda beklenen deger var mi" sorusudur.
+    ...
+    ...    LINUX/CI'DA OLCULEN IKINCI SORUN - JAVASCRIPT'E DUSME:
+    ...    GitHub Actions'in ubuntu kosucusunda headless Chrome, checkout
+    ...    formundaki alanlara gonderilen GERCEK klavye olaylarini (WebDriver
+    ...    `send_keys`) sessizce yutuyordu: hata yok, alan bos. 20 saniyelik
+    ...    tekrar butcesi de bunu kurtarmiyordu, cunku sorun zamanlama degil.
+    ...    Ayni kosumda `Gercek tiklama etki uretmedi` uyarilari da dusuyor;
+    ...    yani fare ve klavye olaylari birlikte etkisiz kaliyor.
+    ...
+    ...    Cozum, `Click Element Until` ile AYNI stratejidir: once gercek
+    ...    kullanici davranisini dene, YALNIZCA o etkisiz kalirsa JavaScript'e
+    ...    dus ve sonucu yine dogrula. Boylece testin olcutu "yazma cagrisi
+    ...    yapildi mi" degil, "alanda beklenen deger var mi" olarak kalir.
     [Arguments]    ${locator}    ${text}    ${secret}=${False}
     Wait Until Element Is Visible    ${locator}    ${DEFAULT_TIMEOUT}
-    Wait Until Keyword Succeeds    ${CLICK_RETRY_BUDGET}    500ms
+    ${succeeded} =    Run Keyword And Return Status
+    ...    Wait Until Keyword Succeeds    ${TYPE_RETRY_BUDGET}    500ms
     ...    Type And Verify Field    ${locator}    ${text}    ${secret}
-
-Type And Verify Field
-    [Arguments]    ${locator}    ${text}    ${secret}=${False}
-    Clear Input Field    ${locator}
-    IF    ${secret}
-        # Input Password degeri log.html icinde maskeler.
-        Input Password    ${locator}    ${text}
-    ELSE
-        Input Text    ${locator}    ${text}
+    IF    not ${succeeded}
+        Log    Gercek klavye girisi etki uretmedi -> JavaScript'e dusuluyor: ${locator}
+        ...    level=WARN
+        # Gizli alanlarda JS cagrisi log.html'e DEGERI yazmasin diye log
+        # seviyesi gecici olarak kapatilir - `Input Password`'un maskeleme
+        # davranisinin JavaScript yolundaki karsiligi budur.
+        IF    ${secret}
+            ${previous_level} =    Set Log Level    NONE
+            TRY
+                Type Text Via JavaScript    ${locator}    ${text}
+            FINALLY
+                Set Log Level    ${previous_level}
+            END
+        ELSE
+            Type Text Via JavaScript    ${locator}    ${text}
+        END
+        Verify Field Value    ${locator}    ${text}    ${secret}
     END
+
+Type Text Via JavaScript
+    [Documentation]    Alanin degerini JavaScript ile, REACT'IN GORECEGI sekilde yazar.
+    ...
+    ...    NEDEN DUZ `element.value = x` YETMEZ:
+    ...    SauceDemo React ile yazilmistir ve inputlar "controlled component"
+    ...    olarak calisir: ekranda gorunen deger React'in ic state'inden gelir.
+    ...    `value` niteligini dogrudan atamak DOM'u degistirir ama React'in
+    ...    onChange isleyicisi tetiklenmez; ic state eskisi gibi kalir ve form
+    ...    gonderildiginde ALAN BOS kabul edilir - test yesil gorunup yanlis
+    ...    dogrulama yapar.
+    ...
+    ...    Dogru yontem, React'in yamaladigi `value` setter'ini atlayip
+    ...    HTMLInputElement prototipindeki YERLI setter'i cagirmak, ardindan
+    ...    gercek bir `input` olayi yaymaktir. React bu olayi kendi sentetik
+    ...    olay sistemine cevirir ve state guncellenir.
+    ...
+    ...    NOT: `Execute Javascript` kod parcalarini ARALARINA BOSLUK KOYMADAN
+    ...    birlestirir; bu yuzden her satir kendi basina tam bir deyimdir.
+    [Arguments]    ${locator}    ${text}
+    ${element} =    Get WebElement    ${locator}
+    Execute Javascript    ARGUMENTS    ${element}    ${text}    JAVASCRIPT
+    ...    var el = arguments[0];
+    ...    var value = arguments[1];
+    ...    var proto = window.HTMLInputElement.prototype;
+    ...    var setter = Object.getOwnPropertyDescriptor(proto, 'value').set;
+    ...    el.focus();
+    ...    setter.call(el, value);
+    ...    el.dispatchEvent(new Event('input', {bubbles: true}));
+    ...    el.dispatchEvent(new Event('change', {bubbles: true}));
+
+Verify Field Value
+    [Documentation]    Alandaki degerin beklenenle ayni oldugunu dogrular.
+    ...    Gizli alanlarda deger loglanmasin diye yalnizca UZUNLUK karsilastirilir.
+    [Arguments]    ${locator}    ${text}    ${secret}=${False}
     ${actual} =    Get Element Attribute    ${locator}    value
     IF    ${secret}
         ${len_actual} =    Get Length    ${actual}
@@ -226,6 +292,18 @@ Type And Verify Field
         Should Be Equal    ${actual}    ${text}
         ...    Alana yazilan deger dogrulanamadi (yazma islemi bosa gitti)
     END
+
+Type And Verify Field
+    [Documentation]    Tek bir GERCEK yazma denemesi: temizle, yaz, dogrula.
+    [Arguments]    ${locator}    ${text}    ${secret}=${False}
+    Clear Input Field    ${locator}
+    IF    ${secret}
+        # Input Password degeri log.html icinde maskeler.
+        Input Password    ${locator}    ${text}
+    ELSE
+        Input Text    ${locator}    ${text}
+    END
+    Verify Field Value    ${locator}    ${text}    ${secret}
 
 Click Element Via JavaScript
     [Documentation]    Elemani JavaScript ile tiklar - SON CARE.

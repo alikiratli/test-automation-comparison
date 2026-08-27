@@ -2,7 +2,7 @@
 
 **Aynı uygulama. Aynı test senaryoları. Üç farklı otomasyon teknolojisi.**
 
-🇹🇷 **Türkçe** · 🇬🇧 [English](README.en.md)
+🇹🇷 **Türkçe** · 🇬🇧 [English](README.en.md) · 🇩🇪 [Deutsch](README.de.md)
 
 [![CI](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml)
 [![Tam paket](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml)
@@ -92,7 +92,7 @@ Automation/
 | Yığın | Test sayısı | Süre | Test başına | Sonuç |
 |-------|:-----------:|------|:-----------:|-------|
 | Selenium + pytest | 61 | 6 dk 07 sn (367 sn) | 6,0 sn | 61 geçti |
-| Robot Framework | 47 | ≈9 dk | ≈11,5 sn | 47 geçti |
+| Robot Framework | 51 | ≈9,5 dk (577 sn) | ≈11,3 sn | 50 geçti, 1 tekrar denemede |
 | Playwright + pytest | 75 | 1 dk 37 sn (97 sn) | 1,3 sn | 74 geçti, 1 `xfail` |
 
 ### Birebir aynı login senaryoları (adil kıyas)
@@ -100,8 +100,16 @@ Automation/
 | Yığın | Senaryo | Süre | Göreli |
 |-------|:-------:|------|:------:|
 | Selenium + pytest | 16 | 77 sn | 3,2× |
-| Robot Framework | 10 | ≈115 sn | 4,8× |
+| Robot Framework | 15 | 102 sn | 4,2× |
 | Playwright + pytest | 15 | 24 sn | 1,0× (referans) |
+
+> **Robot satırındaki iki not.** Test sayısı 47 değil 51: DataDriver suite'i
+> CSV'yi artık gerçekten genişletiyor ve tek satırlık şablondan 5 test üretiyor
+> (önceden CSV hiç okunamıyor, suite tek bir bozuk testle düşüyordu). "1 tekrar
+> denemede" ise `performance_glitch_user` senaryosudur: SauceDemo'nun kasıtlı
+> olarak yavaşlatılmış hesabı canlı siteye karşı ölçüldüğünde ~3 koşumda 1
+> düşüyor, tek başına tekrarlandığında geçiyor. CI bu yüzden Robot'u da
+> Selenium/Playwright gibi yeniden deniyor.
 
 **Fark nereden geliyor?** Selenium ve Robot her test için yeni bir tarayıcı süreci
 açar; bu tek başına test başına ~1–2 saniyedir. Playwright ise tek tarayıcı süreci

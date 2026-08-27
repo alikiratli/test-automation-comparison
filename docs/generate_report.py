@@ -446,7 +446,7 @@ def section_4(doc: Document) -> None:
 def section_5(doc: Document) -> None:
     h1(doc, "5. Proje 2 — Robot Framework + SeleniumLibrary")
 
-    para(doc, "Klasör: 02-robot-framework/  ·  14 dosya  ·  1.893 satır  ·  47 test",
+    para(doc, "Klasör: 02-robot-framework/  ·  14 dosya  ·  2.068 satır  ·  51 test",
          bold=True, color=MUTED)
 
     para(doc,
@@ -678,7 +678,7 @@ def section_7(doc: Document) -> None:
           ["Proje", "Test sayısı", "Süre", "Test başına", "Sonuç"],
           [
               ["Selenium + pytest", "61", "6 dk 07 sn (367 sn)", "6,0 sn", "61 geçti"],
-              ["Robot Framework", "47", "≈9 dk", "≈11,5 sn", "47 geçti"],
+              ["Robot Framework", "51", "≈9,5 dk (577 sn)", "≈11,3 sn", "50 geçti, 1 tekrar denemede"],
               ["Playwright + pytest", "75", "1 dk 37 sn (97 sn)", "1,3 sn", "74 geçti, 1 xfail"],
           ],
           widths=[1.7, 1.0, 1.7, 1.1, 1.4])
@@ -708,7 +708,7 @@ def section_7(doc: Document) -> None:
           ["Ölçüt", "Selenium", "Robot", "Playwright"],
           [
               ["Toplam dosya", "27", "14", "27"],
-              ["Toplam satır", "2.748", "1.893", "2.361"],
+              ["Toplam satır", "2.748", "2.068", "2.361"],
               ["Altyapı katmanı (core/)", "415 satır", "335 satır (common.resource)", "109 satır"],
               ["Bekleme kodu", "127 satır ayrı dosya", "keyword'lere dağılmış", "0 satır"],
               ["Test dosyası satırı", "≈900", "≈700", "≈1.000"],
@@ -971,7 +971,7 @@ def section_9(doc: Document) -> None:
     para(doc, "Belirti:", bold=True)
     para(doc,
          "Robot paketi tek başına çalıştırıldığında tüm testler geçiyor; başka bir test "
-         "paketi aynı anda çalışırken aynı paket 47 testin 15'ini kaybediyor. Hataların "
+         "paketi aynı anda çalışırken aynı paket testlerin 15'ini kaybediyor. Hataların "
          "tamamı \"tıklama etkisiz kaldı\" sınıfında. Aynı adımlar izole edilip tek başına "
          "denendiğinde ilk denemede çalışıyor.")
     para(doc, "Değerlendirme:", bold=True)
@@ -1156,7 +1156,7 @@ def appendix_b(doc: Document) -> None:
                "│   ├── utils/{parsers, data_loader}\n"
                "│   └── tests/                              6 dosya\n"
                "│\n"
-               "├── 02-robot-framework/                     14 dosya · 1.893 satır · 47 test\n"
+               "├── 02-robot-framework/                     14 dosya · 2.068 satır · 51 test\n"
                "│   ├── tests/\n"
                "│   │   ├── __init__.robot                  suite setup/teardown\n"
                "│   │   ├── 01_login.robot                  [Template] veri odaklı\n"

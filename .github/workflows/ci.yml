@@ -43,9 +43,9 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
           cache: pip
@@ -76,12 +76,15 @@ jobs:
         working-directory: 02-robot-framework
         # --dryrun tarayici acmadan tum keyword cagrilarini cozumler:
         # yazim hatasi, eksik keyword, yanlis argüman sayisi burada yakalanir.
-        # DataDriver suite'i CSV'yi kosum aninda genislettigi icin haric tutulur.
+        #
+        # DataDriver suite'i BILEREK haric tutulmuyor: dry-run sirasinda
+        # DataDriver CSV'yi okuyup testleri uretir; boylece lehce/ayrac ve
+        # sutun-arguman eslesmesi hatalari da tarayici acilmadan yakalanir.
+        # (Bu iki hata daha once gecelik kosumu kiriyordu.)
         run: |
           python -m robot --dryrun \
             --outputdir results/dryrun \
             --variablefile variables/environment.py:prod:chrome:true \
-            --exclude datadriven \
             tests/
 
       - name: pytest toplama kontrolu (test kosmadan)
@@ -121,9 +124,9 @@ jobs:
             reports: 03-playwright-pytest/reports
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
           cache: pip
@@ -159,12 +162,42 @@ jobs:
       - name: Smoke testleri (Robot)
         if: matrix.slug == 'robot'
         working-directory: ${{ matrix.dir }}
+        # Robot'un pytest'teki `--reruns` gibi bir secenegi YOKTUR; ayni
+        # toleransi `--rerunfailed` + `rebot --merge` ikilisi saglar: dusen
+        # testler EN FAZLA 2 KEZ daha denenir ve sonuclar TEK rapora
+        # birlestirilir. Sayi, ayni iste kosan pytest'in `--reruns 2` degeriyle
+        # bilerek ayni tutuldu.
+        #
+        # Gerekcesi de ayni: testler bizim kontrolumuzde olmayan canli bir
+        # siteye baglanir. Ozellikle `performance_glitch_user` senaryosu
+        # olculdugunde 3 kosumdan 1'inde aga/gecikmeye bagli olarak dusuyor.
+        # Gercek bir regresyon her denemede duser, dolayisiyla maskelenmez.
         run: |
+          set +e
           python -m robot \
             --include smoke \
             --outputdir results \
+            --output output.xml \
             --variablefile variables/environment.py:prod:chrome:true \
             tests/
+          durum=$?
+          deneme=0
+          while [ $durum -ne 0 ] && [ $deneme -lt 2 ]; do
+            deneme=$((deneme + 1))
+            echo "::warning::Robot: dusen testler icin tekrar denemesi $deneme"
+            python -m robot \
+              --rerunfailed results/output.xml \
+              --outputdir results \
+              --output rerun.xml \
+              --variablefile variables/environment.py:prod:chrome:true \
+              tests/
+            python -m robot.rebot \
+              --outputdir results \
+              --output output.xml \
+              --merge results/output.xml results/rerun.xml
+            durum=$?
+          done
+          exit $durum
 
       - name: Smoke testleri (Playwright)
         if: matrix.slug == 'playwright'
@@ -179,7 +212,7 @@ jobs:
 
       - name: Raporlari artifact olarak yukle
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: smoke-report-${{ matrix.slug }}
           path: ${{ matrix.reports }}
