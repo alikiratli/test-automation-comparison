@@ -2,7 +2,7 @@
 
 **Same application. Same test scenarios. Three different automation stacks.**
 
-🇹🇷 [Türkçe](README.md) · 🇬🇧 **English** · 🇩🇪 [Deutsch](README.de.md)
+🇩🇪 [Deutsch](README.md) · 🇹🇷 [Türkçe](README.tr.md) · 🇬🇧 **English**
 
 [![CI](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml)
 [![Full suite](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml)

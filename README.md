@@ -1,195 +1,207 @@
-# Test Otomasyon Karşılaştırma Projesi
+# Testautomatisierung im Vergleich
 
-**Aynı uygulama. Aynı test senaryoları. Üç farklı otomasyon teknolojisi.**
+**Dieselbe Anwendung. Dieselben Testszenarien. Drei verschiedene Automatisierungs-Stacks.**
 
-🇹🇷 **Türkçe** · 🇬🇧 [English](README.en.md) · 🇩🇪 [Deutsch](README.de.md)
+🇩🇪 **Deutsch** · 🇹🇷 [Türkçe](README.tr.md) · 🇬🇧 [English](README.en.md)
 
 [![CI](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml)
-[![Tam paket](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml)
+[![Vollständige Suite](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml)
 
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
 ![Selenium](https://img.shields.io/badge/Selenium-4.20+-43B02A?logo=selenium&logoColor=white)
 ![Robot Framework](https://img.shields.io/badge/Robot%20Framework-7.0+-000000?logo=robotframework&logoColor=white)
 ![Playwright](https://img.shields.io/badge/Playwright-1.44+-2EAD33?logo=playwright&logoColor=white)
 ![pytest](https://img.shields.io/badge/pytest-8.0+-0A9EDC?logo=pytest&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+![Lizenz](https://img.shields.io/badge/License-MIT-yellow)
 
-Bu depo [SauceDemo](https://www.saucedemo.com) uygulamasını **üç ayrı otomasyon
-yığınıyla** baştan sona test eder. Amaç bir framework'ü "kazandırmak" değil;
-gerçek bir projede üç yaklaşımın **mimari, okunabilirlik, bakım maliyeti, hız ve
-yetenek** farklarını yan yana, ölçülmüş verilerle göstermektir.
+Dieses Repository testet die Anwendung [SauceDemo](https://www.saucedemo.com)
+durchgängig mit **drei getrennten Automatisierungs-Stacks**. Ziel ist nicht, einen
+Sieger zu küren, sondern nebeneinander und mit gemessenen Daten zu zeigen, wie
+sich die drei Ansätze in **Architektur, Lesbarkeit, Wartungsaufwand,
+Geschwindigkeit und Funktionsumfang** in einem echten Projekt unterscheiden.
 
----
-
-## İçindekiler
-
-- [Neden aynı uygulama, aynı senaryolar?](#neden-aynı-uygulama-aynı-senaryolar)
-- [Depo yapısı](#depo-yapısı)
-- [Ölçülen sonuçlar](#ölçülen-sonuçlar)
-- [Üç proje, üç mimari yaklaşım](#üç-proje-üç-mimari-yaklaşım)
-- [Neden üçü de Python?](#neden-üçü-de-python)
-- [Kurulum](#kurulum)
-- [Çalıştırma](#çalıştırma)
-- [Bu projenin bulduğu gerçek kusur](#bu-projenin-bulduğu-gerçek-kusur)
-- [Test hesapları](#test-hesapları)
-- [Sürekli entegrasyon (CI)](#sürekli-entegrasyon-ci)
-- [Raporu yeniden üretmek](#raporu-yeniden-üretmek)
-- [Lisans](#lisans)
+> **Hinweis zur Sprache:** Der Testcode, die Kommentare und die projektinternen
+> READMEs in `01-*`, `02-*` und `03-*` sind auf Türkisch verfasst, ebenso der
+> abschließende Vergleichsbericht. Diese Datei ist eine deutschsprachige
+> Gesamtübersicht des Projekts.
 
 ---
 
-## Neden aynı uygulama, aynı senaryolar?
+## Inhaltsverzeichnis
 
-Framework karşılaştırmalarının çoğu elma ile armudu kıyaslar: farklı sitelerde,
-farklı senaryolarla yazılmış kodlara bakılır ve çıkan fark framework'e yazılır.
-Burada **tek değişken framework'tür** — uygulama, senaryolar, doğrulamalar ve
-test verisi üç projede de birebir aynıdır.
-
-| # | Senaryo | Selenium | Robot | Playwright |
-|---|---------|:--------:|:-----:|:----------:|
-| 1 | Login – geçerli / geçersiz / kilitli kullanıcı (data-driven) | ✔ | ✔ | ✔ |
-| 2 | Ürün listesi – sayı, isim/fiyat sıralama doğrulaması | ✔ | ✔ | ✔ |
-| 3 | Sepet – ekle / çıkar / rozet sayacı / kalıcılık | ✔ | ✔ | ✔ |
-| 4 | Checkout – form validasyonu, KDV & toplam matematiği | ✔ | ✔ | ✔ |
-| 5 | Uçtan uca satın alma akışı | ✔ | ✔ | ✔ |
-| 6 | Navigasyon / menü / logout / session temizliği | ✔ | ✔ | ✔ |
-| 7 | Ağ katmanı mock'lama, trace, video, görsel regresyon, API testi | ✖ | ✖ | ✔ |
-
-Son satır kasıtlıdır: Playwright'ın diğer ikisinde **native olarak bulunmayan**
-yeteneklerini de göstermek için eklenmiştir. Hız kıyası ise her zaman **birebir
-aynı senaryolar** üzerinden yapılır, bu ek testler kıyasa dahil edilmez.
+- [Warum dieselbe Anwendung und dieselben Szenarien?](#warum-dieselbe-anwendung-und-dieselben-szenarien)
+- [Aufbau des Repositorys](#aufbau-des-repositorys)
+- [Gemessene Ergebnisse](#gemessene-ergebnisse)
+- [Drei Projekte, drei Architekturansätze](#drei-projekte-drei-architekturansätze)
+- [Warum für alle drei Python?](#warum-für-alle-drei-python)
+- [Einrichtung](#einrichtung)
+- [Tests ausführen](#tests-ausführen)
+- [Ein echter Fehler, den dieses Projekt gefunden hat](#ein-echter-fehler-den-dieses-projekt-gefunden-hat)
+- [Testkonten](#testkonten)
+- [Continuous Integration (CI)](#continuous-integration-ci)
+- [Den Bericht neu erzeugen](#den-bericht-neu-erzeugen)
+- [Lizenz](#lizenz)
 
 ---
 
-## Depo yapısı
+## Warum dieselbe Anwendung und dieselben Szenarien?
+
+Die meisten Framework-Vergleiche vergleichen Äpfel mit Birnen: Sie betrachten
+Code, der gegen unterschiedliche Websites und mit unterschiedlichen Szenarien
+geschrieben wurde, und schreiben den entstandenen Unterschied dann dem Framework
+zu. Hier ist **das Framework die einzige Variable** — Anwendung, Szenarien,
+Prüfungen und Testdaten sind in allen drei Projekten identisch.
+
+| # | Szenario | Selenium | Robot | Playwright |
+|---|----------|:--------:|:-----:|:----------:|
+| 1 | Login – gültig / ungültig / gesperrter Benutzer (datengetrieben) | ✔ | ✔ | ✔ |
+| 2 | Produktliste – Anzahl, Sortierung nach Name/Preis | ✔ | ✔ | ✔ |
+| 3 | Warenkorb – hinzufügen / entfernen / Zähler / Persistenz | ✔ | ✔ | ✔ |
+| 4 | Checkout – Formularvalidierung, Steuer- und Summenberechnung | ✔ | ✔ | ✔ |
+| 5 | Durchgängiger Kaufprozess | ✔ | ✔ | ✔ |
+| 6 | Navigation / Menü / Logout / Session-Bereinigung | ✔ | ✔ | ✔ |
+| 7 | Netzwerk-Mocking, Trace, Video, visuelle Regression, API-Tests | ✖ | ✖ | ✔ |
+
+Die letzte Zeile ist Absicht: Sie zeigt die Fähigkeiten, die Playwright **nativ**
+mitbringt und die den anderen beiden fehlen. Geschwindigkeitsvergleiche werden
+jedoch stets über die **identischen Szenarien** geführt — diese Zusatztests
+bleiben dabei ausgeschlossen.
+
+---
+
+## Aufbau des Repositorys
 
 ```
 Automation/
 ├── 01-selenium-pytest/     Selenium WebDriver 4 + pytest + Page Object Model
-├── 02-robot-framework/     Robot Framework 7 + SeleniumLibrary (keyword-driven)
+├── 02-robot-framework/     Robot Framework 7 + SeleniumLibrary (keyword-getrieben)
 ├── 03-playwright-pytest/   Playwright (sync API) + pytest + Locator/POM
-├── shared/                 Üç projenin de okuduğu ortak test verisi
-│   ├── users.json          Kullanıcı hesapları ve beklenen davranışları
-│   └── products.json       Ürün adları, fiyatları, sıralama beklentileri
+├── shared/                 Testdaten, die alle drei Projekte einlesen
+│   ├── users.json          Benutzerkonten und ihr erwartetes Verhalten
+│   └── products.json       Produktnamen, Preise, Sortiererwartungen
 ├── docs/
-│   └── generate_report.py  Karşılaştırma raporunu (.docx) üreten script
-└── Otomasyon_Karsilastirma_Raporu.docx   Nihai karşılaştırma raporu
+│   └── generate_report.py  Skript, das den Vergleichsbericht (.docx) erzeugt
+└── Otomasyon_Karsilastirma_Raporu.docx   Abschließender Vergleichsbericht (Türkisch)
 ```
 
-`shared/` klasörü bilerek ortaktır: üç proje de aynı JSON dosyalarını okur, böylece
-"test verisi farklıydı" itirazı baştan kapanır. Selenium projesindeki
-`test_shared_data_file_is_consistent` testi bu dosyaların tutarlılığını doğrular.
+`shared/` ist bewusst gemeinsam: Alle drei Projekte lesen dieselben JSON-Dateien,
+womit der Einwand "die Testdaten waren unterschiedlich" von vornherein entkräftet
+ist. Der Selenium-Test `test_shared_data_file_is_consistent` prüft die
+Konsistenz dieser Dateien.
 
 ---
 
-## Ölçülen sonuçlar
+## Gemessene Ergebnisse
 
-> Aşağıdaki sayılar tahmin değildir — hepsi **aynı makinede, headless Chrome ile
-> gerçekten koşturulan** testlerden alınmıştır.
+> Die folgenden Zahlen sind keine Schätzungen — jede einzelne stammt aus Tests,
+> die **tatsächlich auf derselben Maschine mit headless Chrome ausgeführt** wurden.
 
-### Tüm paket
+### Vollständige Suite
 
-| Yığın | Test sayısı | Süre | Test başına | Sonuç |
-|-------|:-----------:|------|:-----------:|-------|
-| Selenium + pytest | 61 | 6 dk 07 sn (367 sn) | 6,0 sn | 61 geçti |
-| Robot Framework | 51 | ≈9,5 dk (577 sn) | ≈11,3 sn | 50 geçti, 1 tekrar denemede |
-| Playwright + pytest | 75 | 1 dk 37 sn (97 sn) | 1,3 sn | 74 geçti, 1 `xfail` |
+| Stack | Tests | Dauer | Pro Test | Ergebnis |
+|-------|:-----:|-------|:--------:|----------|
+| Selenium + pytest | 61 | 6 min 07 s (367 s) | 6,0 s | 61 bestanden |
+| Robot Framework | 51 | ≈9,5 min (577 s) | ≈11,3 s | 50 bestanden, 1 im zweiten Versuch |
+| Playwright + pytest | 75 | 1 min 37 s (97 s) | 1,3 s | 74 bestanden, 1 `xfail` |
 
-### Birebir aynı login senaryoları (adil kıyas)
+### Identische Login-Szenarien (direkter Vergleich)
 
-| Yığın | Senaryo | Süre | Göreli |
-|-------|:-------:|------|:------:|
-| Selenium + pytest | 16 | 77 sn | 3,2× |
-| Robot Framework | 15 | 102 sn | 4,2× |
-| Playwright + pytest | 15 | 24 sn | 1,0× (referans) |
+| Stack | Szenarien | Dauer | Relativ |
+|-------|:---------:|-------|:-------:|
+| Selenium + pytest | 16 | 77 s | 3,2× |
+| Robot Framework | 15 | 102 s | 4,2× |
+| Playwright + pytest | 15 | 24 s | 1,0× (Referenz) |
 
-> **Robot satırındaki iki not.** Test sayısı 47 değil 51: DataDriver suite'i
-> CSV'yi artık gerçekten genişletiyor ve tek satırlık şablondan 5 test üretiyor
-> (önceden CSV hiç okunamıyor, suite tek bir bozuk testle düşüyordu). "1 tekrar
-> denemede" ise `performance_glitch_user` senaryosudur: SauceDemo'nun kasıtlı
-> olarak yavaşlatılmış hesabı canlı siteye karşı ölçüldüğünde ~3 koşumda 1
-> düşüyor, tek başına tekrarlandığında geçiyor. CI bu yüzden Robot'u da
-> Selenium/Playwright gibi yeniden deniyor.
+> **Zwei Anmerkungen zur Robot-Zeile.** Die Testanzahl ist 51, nicht 47: Die
+> DataDriver-Suite expandiert die CSV jetzt tatsächlich und erzeugt aus einer
+> einzeiligen Vorlage 5 Tests (zuvor war die CSV überhaupt nicht lesbar und die
+> Suite fiel mit einem einzigen defekten Test durch). "1 im zweiten Versuch"
+> bezeichnet das Szenario `performance_glitch_user`: SauceDemos bewusst
+> verlangsamtes Konto fällt gegen die Live-Seite etwa in einem von drei Läufen
+> durch und besteht, wenn es allein wiederholt wird. Deshalb wiederholt die CI
+> nun auch Robot — genau wie Selenium und Playwright.
 
-**Fark nereden geliyor?** Selenium ve Robot her test için yeni bir tarayıcı süreci
-açar; bu tek başına test başına ~1–2 saniyedir. Playwright ise tek tarayıcı süreci
-üzerinde izole `BrowserContext` açar — maliyeti ~20–50 milisaniyedir. Ayrıca
-Playwright tarayıcıyı CDP/WebSocket üzerinden doğrudan sürer; WebDriver protokolü
-ve aradaki `chromedriver` süreci devre dışıdır.
+**Woher kommt der Unterschied?** Selenium und Robot starten für jeden Test einen
+neuen Browser-Prozess; allein das kostet ~1–2 Sekunden pro Test. Playwright öffnet
+stattdessen einen isolierten `BrowserContext` auf einem einzigen Browser-Prozess —
+Kosten: ~20–50 Millisekunden. Hinzu kommt, dass Playwright den Browser direkt über
+CDP/WebSocket steuert; das WebDriver-Protokoll und der zwischengeschaltete
+`chromedriver`-Prozess entfallen.
 
 ---
 
-## Üç proje, üç mimari yaklaşım
+## Drei Projekte, drei Architekturansätze
 
-### `01-selenium-pytest/` — Kod merkezli, tam kontrol
+### `01-selenium-pytest/` — Code-zentriert, volle Kontrolle
 
-Elle yazılmış bir **framework katmanı** içerir; hazır bir soyutlamaya yaslanmaz.
-Katman kuralı katıdır:
+Enthält eine handgeschriebene **Framework-Schicht** und stützt sich nicht auf eine
+fertige Abstraktion. Die Schichtregel ist streng:
 
 ```
 tests/  ->  pages/  ->  core/  ->  selenium
 ```
 
-* **Test** hiçbir zaman CSS selector veya `WebDriverWait` görmez.
-* **Page Object** hiçbir zaman `assert` yazmaz — durum döner, doğrulamak testin işidir.
-* **Core** hiçbir zaman uygulamayı bilmez — genel amaçlıdır.
+* Ein **Test** sieht niemals einen CSS-Selektor oder ein `WebDriverWait`.
+* Ein **Page Object** schreibt niemals ein `assert` — es liefert Zustand zurück; das Prüfen ist Aufgabe des Tests.
+* **Core** kennt die Anwendung nicht — es ist allgemein verwendbar.
 
-`core/` altında driver factory, bekleme/retry sarmalayıcıları, özel Expected
-Condition'lar, soft assert, teşhis edilebilir hata tipleri ve loglama bulunur.
-Selenium 4.6+ ile gelen **Selenium Manager** sürücüyü otomatik indirir; ayrıca
-`chromedriver.exe` indirmenize gerek yoktur.
+In `core/` liegen die Driver-Factory, Wait-/Retry-Wrapper, eigene Expected
+Conditions, Soft Asserts, diagnosefähige Exception-Typen und das Logging. Der
+Selenium Manager (ab Selenium 4.6+ enthalten) lädt den Treiber automatisch, sodass
+`chromedriver.exe` nicht separat besorgt werden muss.
 
-### `02-robot-framework/` — Keyword-driven, düşük giriş bariyeri
+### `02-robot-framework/` — Keyword-getrieben, niedrige Einstiegshürde
 
-> Robot Framework, Selenium'un *alternatifi* değildir. SeleniumLibrary'nin altında
-> **yine Selenium WebDriver çalışır**. Robot, Selenium'un **üzerine kurulan bir
-> soyutlama katmanıdır**.
+> Robot Framework ist keine *Alternative* zu Selenium. Unter SeleniumLibrary
+> **läuft weiterhin Selenium WebDriver**. Robot ist eine **Abstraktionsschicht
+> oberhalb von Selenium**.
 
-Robot'ta sınıf yoktur; kapsülleme **dosya düzeyindedir**:
+Robot kennt keine Klassen; Kapselung geschieht **auf Dateiebene**:
 
 | Selenium (Python) | Robot Framework |
 |-------------------|-----------------|
 | `class LoginPage:` | `resources/pages/login_page.resource` |
-| Sınıf sabiti `USERNAME_INPUT` | `*** Variables ***` içindeki `${LOGIN_USERNAME_INPUT}` |
-| Metot `def login(self, ...)` | `*** Keywords ***` içindeki `Login As` |
-| `conftest.py` fixture | `Test Setup` / `Suite Setup` |
-| `@pytest.mark.parametrize` | `[Template]` veya DataDriver |
+| Klassenkonstante `USERNAME_INPUT` | `${LOGIN_USERNAME_INPUT}` unter `*** Variables ***` |
+| Methode `def login(self, ...)` | `Login As` unter `*** Keywords ***` |
+| `conftest.py`-Fixture | `Test Setup` / `Suite Setup` |
+| `@pytest.mark.parametrize` | `[Template]` oder DataDriver |
 | `pytest -m smoke` | `robot --include smoke` |
 
-Hesaplama ve karmaşık doğrulama gerektiren işler `libraries/SauceDemoLibrary.py`
-içindeki **Python keyword kütüphanesine** taşınmıştır — Robot'un doğal sınırının
-nerede başladığını göstermek için.
+Arbeiten, die echte Berechnungen oder komplexe Prüfungen erfordern, wandern in die
+**Python-Keyword-Bibliothek** `libraries/SauceDemoLibrary.py` — genau um zu zeigen,
+wo die natürliche Grenze von Robot beginnt.
 
-### `03-playwright-pytest/` — Modern, hızlı, geniş yetenekli
+### `03-playwright-pytest/` — Modern, schnell, breiter Funktionsumfang
 
-`tests/ui/` diğer iki projeyle **birebir aynı** senaryoları içerir. `tests/advanced/`
-ise Selenium ve Robot'ta native karşılığı olmayanları gösterir:
+`tests/ui/` enthält die **identischen** Szenarien der beiden anderen Projekte.
+`tests/advanced/` zeigt, wofür es in Selenium oder Robot keine native Entsprechung gibt:
 
-* **Ağ katmanı mock'lama** — `page.route()` ile istek yakalama / değiştirme
-* **Görsel regresyon** — referans PNG'ler `reports/visual_baseline/` altında sürüm kontrolündedir
-* **Cihaz emülasyonu** — mobil viewport / user-agent / touch
-* **API testi** — `APIRequestContext` ile UI'sız doğrulama
-* **Trace & video** — başarısız testin adım adım kaydı
+* **Netzwerk-Mocking** — Anfragen mit `page.route()` abfangen/verändern
+* **Visuelle Regression** — Referenz-PNGs liegen versioniert unter `reports/visual_baseline/`
+* **Geräteemulation** — mobiler Viewport / User Agent / Touch
+* **API-Tests** — Prüfungen ohne UI über `APIRequestContext`
+* **Trace & Video** — schrittweise Aufzeichnung eines fehlgeschlagenen Tests
 
-Otomatik bekleme (auto-waiting) sayesinde `WebDriverWait` benzeri açık beklemeler
-neredeyse tamamen ortadan kalkar; `get_by_role()` locator'ları ise DOM yerine
-**erişilebilirlik ağacını** sorgular.
-
----
-
-## Neden üçü de Python?
-
-Playwright'ın en yaygın kullanımı TypeScript'tir, fakat bu projede üçü de Python
-ile yazılmıştır. Sebep: karşılaştırmanın **dil farkıyla kirlenmemesi**. TypeScript
-ile yazılsaydı gördüğünüz farkların bir kısmı "TS vs Python" farkı olurdu,
-framework farkı değil. Raporda TypeScript varyantının getirdiği ek farklar ayrıca
-not edilmiştir.
+Das automatische Warten macht nahezu jedes explizite Warten im Stil von
+`WebDriverWait` überflüssig, und `get_by_role()`-Locators fragen den
+**Accessibility-Baum** ab statt das DOM.
 
 ---
 
-## Kurulum
+## Warum für alle drei Python?
 
-**Önerilen: her proje için ayrı sanal ortam.**
+Playwright wird meist mit TypeScript eingesetzt, dennoch sind hier alle drei
+Projekte in Python geschrieben. Der Grund: den Vergleich **nicht durch
+Sprachunterschiede zu verfälschen**. Wäre eines in TypeScript geschrieben, wäre ein
+Teil des Sichtbaren ein "TS vs. Python"-Unterschied statt eines
+Framework-Unterschieds. Der Bericht hält gesondert fest, welche zusätzlichen
+Unterschiede eine TypeScript-Variante mit sich bringt.
+
+---
+
+## Einrichtung
+
+**Empfohlen: eine eigene virtuelle Umgebung pro Projekt.**
 
 ```powershell
 foreach ($p in "01-selenium-pytest","02-robot-framework","03-playwright-pytest") {
@@ -200,20 +212,21 @@ foreach ($p in "01-selenium-pytest","02-robot-framework","03-playwright-pytest")
 ```
 
 <details>
-<summary><b>Neden ayrı ortam? (tek ortam kullanmak isterseniz okuyun)</b></summary>
+<summary><b>Warum getrennte Umgebungen? (lies dies, wenn du nur eine willst)</b></summary>
 
 <br>
 
-`pytest-playwright` eklentisi, kurulduğu ortamdaki **her** pytest koşumunda
-otomatik yüklenir ve kendi `--browser` seçeneğini kaydeder. Selenium projesi de
-`--browser` tanımladığı için tek ortamda şu hata alınır:
+Das Plugin `pytest-playwright` lädt in der Umgebung, in der es installiert ist, bei
+**jedem** pytest-Lauf automatisch und registriert eine eigene `--browser`-Option.
+Das Selenium-Projekt definiert `--browser` ebenfalls, sodass eine gemeinsame
+Umgebung Folgendes erzeugt:
 
 ```
 argparse.ArgumentError: argument --browser: conflicting option string: --browser
 ```
 
-Selenium projesi bunu `pytest.ini` içindeki `-p no:playwright` satırıyla zaten
-devre dışı bırakır, dolayısıyla tek ortam da çalışır:
+Das Selenium-Projekt schaltet dies über die Zeile `-p no:playwright` in seiner
+`pytest.ini` bereits ab, eine einzelne Umgebung funktioniert also:
 
 ```powershell
 python -m venv .venv ; .\.venv\Scripts\Activate.ps1
@@ -227,9 +240,9 @@ python -m playwright install chromium firefox webkit
 
 ---
 
-## Çalıştırma
+## Tests ausführen
 
-Her projenin kendi `run_tests.ps1` sarmalayıcısı vardır:
+Jedes Projekt bringt seinen eigenen `run_tests.ps1`-Wrapper mit:
 
 ```powershell
 cd 01-selenium-pytest ; .\run_tests.ps1
@@ -237,13 +250,13 @@ cd 02-robot-framework ; .\run_tests.ps1
 cd 03-playwright-pytest ; .\run_tests.ps1
 ```
 
-Sık kullanılan seçenekler:
+Häufig genutzte Optionen:
 
 ```powershell
 # Selenium / Playwright (pytest)
-.\run_tests.ps1 -Marker smoke      # sadece smoke testleri
-.\run_tests.ps1 -Headed            # tarayıcı görünür
-.\run_tests.ps1 -Parallel 4        # 4 process paralel
+.\run_tests.ps1 -Marker smoke      # nur Smoke-Tests
+.\run_tests.ps1 -Headed            # sichtbarer Browser
+.\run_tests.ps1 -Parallel 4        # 4 Prozesse parallel
 python -m pytest -m "cart or checkout" -v
 python -m pytest tests/test_login.py::test_standard_user_can_login
 
@@ -251,108 +264,111 @@ python -m pytest tests/test_login.py::test_standard_user_can_login
 .\run_tests.ps1 -Tags smoke
 .\run_tests.ps1 -Tags "cart OR checkout"
 .\run_tests.ps1 -Suite 03_cart
-.\run_tests.ps1 -Parallel 4        # pabot ile paralel
+.\run_tests.ps1 -Parallel 4        # parallel über pabot
 ```
 
-**Raporlar** (her koşumda yeniden üretilir, sürüm kontrolüne girmez):
+**Berichte** (bei jedem Lauf neu erzeugt, nicht versioniert):
 
-| Proje | Çıktı |
-|-------|-------|
-| Selenium | `01-selenium-pytest/reports/report.html` + log + hata ekran görüntüleri |
+| Projekt | Ausgabe |
+|---------|---------|
+| Selenium | `01-selenium-pytest/reports/report.html` + Logs + Fehler-Screenshots |
 | Robot | `02-robot-framework/results/report.html` + `log.html` |
-| Playwright | `03-playwright-pytest/reports/report.html` + trace + video |
+| Playwright | `03-playwright-pytest/reports/report.html` + Traces + Video |
 
-Tek istisna `03-playwright-pytest/reports/visual_baseline/` klasörüdür: görsel
-regresyon referans görüntüleri bilerek depoya dahil edilmiştir, aksi halde
-karşılaştırılacak bir referans kalmaz.
-
----
-
-## Bu projenin bulduğu gerçek kusur
-
-Playwright paketi, SauceDemo'da **gerçek bir erişilebilirlik kusuru** ortaya
-çıkardı: envanter sayfasında hiçbir `heading` (h1–h6) elemanı yok — sayfa başlığı
-`<span>` olarak işlenmiş. Ekran okuyucu kullanan biri sayfa yapısında gezinemez
-(**WCAG 2.1 – 1.3.1**).
-
-Bu kusur, `get_by_role()` locator'ının DOM yerine **erişilebilirlik ağacını**
-sorgulaması sayesinde bulundu; CSS selector'a dayanan Selenium ve Robot
-projelerinde fark edilmeden kalırdı. İlgili test, uygulamanın bilinen açık kusuru
-olarak `xfail` ile işaretlenmiştir — bu yüzden tablodaki "74 geçti, 1 xfail"
-sonucu bir başarısızlık değil, **kasıtlı bir bulgudur**.
+Die einzige Ausnahme ist `03-playwright-pytest/reports/visual_baseline/`: Die
+Referenzbilder der visuellen Regression sind bewusst eingecheckt — sonst gäbe es
+nichts mehr, wogegen verglichen werden könnte.
 
 ---
 
-## Test hesapları
+## Ein echter Fehler, den dieses Projekt gefunden hat
 
-SauceDemo bu hesapları giriş sayfasında public olarak yayınlar; gizli bir bilgi değildir.
+Die Playwright-Suite hat einen **echten Barrierefreiheitsfehler** in SauceDemo
+zutage gefördert: Die Inventarseite enthält überhaupt kein `heading`-Element
+(h1–h6) — der Seitentitel wird als `<span>` gerendert. Wer einen Screenreader
+benutzt, kann die Seitenstruktur nicht navigieren (**WCAG 2.1 – 1.3.1**).
 
-| Kullanıcı | Davranış |
-|-----------|----------|
-| `standard_user` | Normal akış |
-| `locked_out_user` | Giriş engellenir |
-| `problem_user` | Bozuk görseller / hatalı alanlar |
-| `performance_glitch_user` | Kasıtlı gecikme (bekleme stratejisi testi) |
-| `error_user`, `visual_user` | Checkout ve görsel hataları |
-
-Şifre hepsi için: `secret_sauce`
-
----
-
-## Sürekli entegrasyon (CI)
-
-Testler **canlı bir üçüncü taraf siteye** bağlandığı ve tam paket üçü birden
-~16 dakika sürdüğü için CI ikiye bölünmüştür:
-
-| Workflow | Ne zaman | Ne koşar | Süre |
-|----------|----------|----------|------|
-| [`ci.yml`](.github/workflows/ci.yml) | Her push / PR | Statik kontroller + üç yığının **smoke** testleri | ~5 dk |
-| [`full-suite.yml`](.github/workflows/full-suite.yml) | Her gece 03:00 UTC + elle | Üç yığının **tüm** paketi | ~20 dk |
-
-**`ci.yml` — statik kontroller** (tarayıcı açmadan, saniyeler içinde):
-Python söz dizimi derlemesi, `shared/*.json` geçerlilik kontrolü, Robot
-suite'lerinin `--dryrun` ile çözümlenmesi (yazım hatası / eksik keyword burada
-yakalanır) ve pytest `--collect-only` ile import hatası taraması. Bunlar geçmeden
-smoke işleri başlamaz.
-
-**Smoke işleri** üç yığın için paralel koşar ve `fail-fast: false` ile
-tanımlanmıştır — amaç "hangi yığın bozuldu" sorusunu tek koşumda cevaplayabilmek.
-Her koşumun HTML raporu artifact olarak yüklenir.
-
-**`full-suite.yml`** elle tetiklendiğinde tek bir yığın seçilebilir
-(`all` / `selenium` / `robot` / `playwright`) ve her işin süresi GitHub iş özetine
-tablo olarak yazılır.
-
-İki ayrıntı bilinçli tercihtir:
-
-* **`--reruns`** — testler kontrolümüzde olmayan bir siteye bağlandığı için ağ
-  kaynaklı tek seferlik hatalar build'i kırmasın diye yeniden deneme açıktır.
-  Gerçek bir regresyon her denemede düşeceği için maskelenmez.
-* **Playwright'ta `-m "not visual"`** — görsel regresyon referansları Windows'ta
-  üretildi; Linux runner'da yazı tipi render'ı farklı olduğu için bu testler
-  gerçek bir regresyondan değil, **platform farkından** düşer. Görsel testler bu
-  yüzden yerelde (Windows'ta) koşturulmalıdır.
+Gefunden wurde der Fehler, weil `get_by_role()` den **Accessibility-Baum** abfragt
+statt das DOM; in den Selenium- und Robot-Projekten, die auf CSS-Selektoren
+beruhen, wäre er unbemerkt geblieben. Der zugehörige Test ist als `xfail` markiert,
+also als bekannter offener Fehler der Anwendung — deshalb ist die Zeile
+"74 bestanden, 1 xfail" kein Fehlschlag, sondern ein **bewusster Befund**.
 
 ---
 
-## Raporu yeniden üretmek
+## Testkonten
+
+SauceDemo veröffentlicht diese Konten offen auf seiner Login-Seite; es sind keine
+Geheimnisse.
+
+| Benutzer | Verhalten |
+|----------|-----------|
+| `standard_user` | Normaler Ablauf |
+| `locked_out_user` | Login wird blockiert |
+| `problem_user` | Defekte Bilder / falsche Felder |
+| `performance_glitch_user` | Absichtliche Verzögerung (prüft die Wartestrategie) |
+| `error_user`, `visual_user` | Checkout- und Darstellungsfehler |
+
+Passwort für alle: `secret_sauce`
+
+---
+
+## Continuous Integration (CI)
+
+Da die Tests eine **live erreichbare Drittanbieter-Website** ansprechen und die
+drei vollständigen Suiten zusammen rund 16 Minuten brauchen, ist die CI zweigeteilt:
+
+| Workflow | Wann | Was ausgeführt wird | Dauer |
+|----------|------|---------------------|-------|
+| [`ci.yml`](.github/workflows/ci.yml) | Bei jedem Push / PR | Statische Prüfungen + die **Smoke**-Tests aller drei Stacks | ~5 min |
+| [`full-suite.yml`](.github/workflows/full-suite.yml) | Nachts um 03:00 UTC + manuell | Die **vollständige** Suite aller drei Stacks | ~20 min |
+
+**`ci.yml` — statische Prüfungen** (ohne Browser, in Sekunden erledigt):
+Python-Bytecode-Kompilierung, Gültigkeit von `shared/*.json`, Auflösen der
+Robot-Suiten mit `--dryrun` (Tippfehler und fehlende Keywords werden hier
+gefunden) sowie ein `--collect-only`-Durchlauf von pytest für Importfehler. Die
+Smoke-Jobs starten erst, wenn diese bestanden sind.
+
+**Die Smoke-Jobs** laufen für die drei Stacks parallel mit `fail-fast: false` — es
+geht darum, die Frage "welcher Stack ist kaputt" in einem einzigen Lauf zu
+beantworten. Der HTML-Bericht jedes Laufs wird als Artefakt hochgeladen.
+
+**`full-suite.yml`** akzeptiert beim manuellen Start einen einzelnen Stack
+(`all` / `selenium` / `robot` / `playwright`) und schreibt die Dauer jedes Jobs als
+Tabelle in die GitHub-Job-Zusammenfassung.
+
+Zwei Details sind Absicht:
+
+* **`--reruns`** — da die Tests von einer Website außerhalb unserer Kontrolle
+  abhängen, sind Wiederholungen aktiviert, damit einmalige Netzwerkfehler den Build
+  nicht zerstören. Eine echte Regression schlägt bei jedem Versuch fehl und wird
+  daher nicht verdeckt.
+* **`-m "not visual"` für Playwright** — die Referenzbilder der visuellen Regression
+  wurden unter Windows erzeugt; auf dem Linux-Runner unterscheidet sich das
+  Font-Rendering, sodass diese Tests wegen eines **Plattformunterschieds** und nicht
+  wegen einer echten Regression fehlschlagen würden. Visuelle Tests sollten deshalb
+  lokal unter Windows laufen.
+
+---
+
+## Den Bericht neu erzeugen
 
 ```powershell
 pip install python-docx
 python docs\generate_report.py
 ```
 
-Script, `Otomasyon_Karsilastirma_Raporu.docx` dosyasını proje kökünde yeniden
-oluşturur. Rapordaki tüm sayısal değerler yukarıdaki gerçek koşum sonuçlarından
-gelir.
+Das Skript baut `Otomasyon_Karsilastirma_Raporu.docx` im Projektstamm neu auf. Jede
+Zahl im Bericht stammt aus den oben gezeigten echten Laufergebnissen.
 
 ---
 
-## Lisans
+## Lizenz
 
-Bu proje [MIT Lisansı](LICENSE) ile yayınlanmıştır — serbestçe kullanabilir,
-değiştirebilir ve dağıtabilirsiniz; tek koşul telif bildiriminin korunmasıdır.
+Veröffentlicht unter der [MIT-Lizenz](LICENSE) — Nutzung, Änderung und Weitergabe
+sind frei, einzige Bedingung ist die Beibehaltung des Copyright-Hinweises.
 
-Test edilen uygulama [SauceDemo](https://www.saucedemo.com) bu projeye ait
-değildir; Sauce Labs tarafından otomasyon pratiği için public olarak sunulan bir
-demo uygulamasıdır. MIT lisansı yalnızca bu depodaki test kodunu kapsar.
+Die getestete Anwendung [SauceDemo](https://www.saucedemo.com) ist nicht Teil dieses
+Projekts; sie ist eine von Sauce Labs öffentlich bereitgestellte Demo-Anwendung zum
+Üben von Automatisierung. Die MIT-Lizenz deckt ausschließlich den Testcode in
+diesem Repository ab.
