@@ -122,7 +122,7 @@ Menu ogeleri beklenen sirada olmali
     [Tags]    regression    navigation
     Login As Standard User
     ${items} =    Get Side Menu Items
-    ${expected} =    Create List    All Items    About    Logout    Reset App State
+    ${expected} =    Create List    All Items    Dynamic Catalog    About    Logout    Reset App State
     Lists Should Be Equal    ${items}    ${expected}
     ...    msg=Yan menu ogeleri degismis
 

@@ -130,7 +130,7 @@ def test_no_console_errors_during_purchase(login_page: LoginPage, customer) -> N
 @pytest.mark.regression
 def test_menu_items_and_page_titles(inventory_page) -> None:
     items = inventory_page.header.get_menu_items()
-    assert items == ["All Items", "About", "Logout", "Reset App State"]
+    assert items == ["All Items", "Dynamic Catalog", "About", "Logout", "Reset App State"]
 
     assert inventory_page.title == "Swag Labs"
     expect(inventory_page.header.app_logo).to_have_text("Swag Labs")

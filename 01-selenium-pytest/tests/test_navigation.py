@@ -11,7 +11,7 @@ pytestmark = [pytest.mark.regression]
 def test_burger_menu_contains_expected_items(inventory_page: InventoryPage) -> None:
     items = inventory_page.header.menu_items()
 
-    expected = ["All Items", "About", "Logout", "Reset App State"]
+    expected = ["All Items", "Dynamic Catalog", "About", "Logout", "Reset App State"]
     assert items == expected, f"Menu ogeleri degismis: {items}"
 
 
