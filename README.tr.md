@@ -4,6 +4,8 @@
 
 🇩🇪 [Deutsch](README.md) · 🇹🇷 **Türkçe** · 🇬🇧 [English](README.en.md)
 
+> **Geliştirme:** Ali Kiratli'nin bireysel projesi; [Claude Code](https://claude.com/claude-code) ile yapay zekâ destekli geliştirildi. Gereksinimler, mimari, test stratejisi ve inceleme: Ali Kiratli.
+
 [![CI](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml)
 [![Tam paket](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml)
 

@@ -4,6 +4,8 @@
 
 🇩🇪 [Deutsch](README.md) · 🇹🇷 [Türkçe](README.tr.md) · 🇬🇧 **English**
 
+> **Development:** Solo project by Ali Kiratli, AI-assisted with [Claude Code](https://claude.com/claude-code). Requirements, architecture, test strategy and review: Ali Kiratli.
+
 [![CI](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/ci.yml)
 [![Full suite](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml/badge.svg)](https://github.com/alikiratli/test-automation-comparison/actions/workflows/full-suite.yml)
 
